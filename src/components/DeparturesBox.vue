@@ -1,6 +1,6 @@
 <template>
   <ion-list-header mode="ios">
-    <ion-label v-if="!loading">{{ resp[0].stop.name }} <small>{{ stationNameComment }}</small></ion-label>
+    <ion-label v-if="!loading" mode="ios" style="font-size: x-large">{{ resp[0].stop.name }} <small>{{ stationNameComment }}</small></ion-label>
   </ion-list-header>
   <ion-list v-if="!loading">
     <ion-item v-for="(departure, index) in resp" :key="index" v-show="(departure.stop.platform_code===platform)">
@@ -20,6 +20,11 @@
           </ion-col>
         </ion-row>
       </ion-grid>
+    </ion-item>
+  </ion-list>
+  <ion-list v-if="loading">
+    <ion-item>
+      <ion-label mode="ios" style="font-size: x-large">Načítám odjezdy...</ion-label>
     </ion-item>
   </ion-list>
 </template>

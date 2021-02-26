@@ -29,14 +29,14 @@
           <ion-col size="6">
             <DeparturesBox :cis-id="58936" platform="A" station-name-comment="(směr centrum)"/>
             <DeparturesBox :cis-id="62891" platform="B" station-name-comment="(směr Nusle)"/>
-            <ion-button mode="ios" expand="block" strong="true" size="large" href="https://dashboard.fd.cvut.cz">Vstoupit do infosystému FD</ion-button>
+            <ion-button mode="ios" expand="block" strong="true" size="large" href="https://dashboard.fd.cvut.cz">Vstoupit do infosystému ČVUT FD</ion-button>
           </ion-col>
         </ion-row>
       </ion-grid>
     </ion-content>
     <ion-footer>
       <ion-toolbar fill="solid" color="primary" style="padding: 0 10px 0 10px; min-height: unset">
-        <ion-text mode="ios">&copy; 2017-2021 Petr Hnyk, ČVUT v Praze, Fakulta dopravní, Ústav dopravní telematiky (K620), studentský projekt 20X1Y (oi.fd.cvut.cz). Data z datové platformy Golemio, bez záruky.</ion-text>
+        <ion-text mode="ios">&copy; 2017-2021 Petr Hnyk, ČVUT v Praze, Fakulta dopravní, Ústav dopravní telematiky (K620), studentský projekt 20X1Y (<a href="https://oi.fd.cvut.cz" style="color: white">oi.fd.cvut.cz</a>). <span style="float: right">Ikony z grafiky PID, data z datové platformy Golemio, bez záruky.</span></ion-text>
       </ion-toolbar>
     </ion-footer>
   </ion-page>

@@ -23,7 +23,7 @@ export default {
     this.interval = setInterval(() => {
       // Concise way to format time according to system locale.
       // In my case this returns "3:48:00 am"
-      this.time = Intl.DateTimeFormat(navigator.language, {
+      this.time = Intl.DateTimeFormat('cs-CZ', {
         hour: 'numeric',
         minute: 'numeric',
         second: 'numeric'

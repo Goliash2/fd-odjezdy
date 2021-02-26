@@ -1,6 +1,6 @@
 {
   "name": "departure-boards",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "private": true,
   "description": "Departure Boards for Prague Public Transport",
   "scripts": {

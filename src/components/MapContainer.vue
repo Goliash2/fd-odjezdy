@@ -1,4 +1,9 @@
 <template>
+  <ion-list v-if="loading">
+    <ion-item>
+      <ion-label mode="ios" style="font-size: x-large">Připravuji a načítám mapu...</ion-label>
+    </ion-item>
+  </ion-list>
 <div class="map-div">
           <l-map
             v-if="!loading"
