@@ -14,6 +14,8 @@
           <l-tile-layer
               url="https://m1.mapserver.mapy.cz/turist-m/{z}-{x}-{y}"
           ></l-tile-layer>
+            <l-control-attribution position="bottomleft" prefix='&copy; <a href="http://www.seznam.cz">Seznam.cz, a.s.</a>, <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'></l-control-attribution>
+            <l-control-attribution position="bottomright" prefix='<img src="/odjezdy/horska/assets/logo/mapy-cz/mapy_logo.png" height=30>'></l-control-attribution>
           <l-marker v-for="(vehicle) in resp.features"
           :key="vehicle.properties.id"
               :lat-lng="[vehicle.geometry.coordinates[1],vehicle.geometry.coordinates[0]]"
@@ -30,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import { LMap, LTileLayer, LMarker, LIcon } from "@vue-leaflet/vue-leaflet";
+import { LMap, LTileLayer, LMarker, LIcon, LControlAttribution } from "@vue-leaflet/vue-leaflet";
 import { ref, onMounted } from 'vue'
 import "leaflet/dist/leaflet.css";
 import axios from 'axios';
@@ -44,7 +46,8 @@ export default {
     LMap,
     LTileLayer,
     LMarker,
-    LIcon
+    LIcon,
+    LControlAttribution
   },
   data() {
     return {
