@@ -1,7 +1,7 @@
 <template>
 <div class="map-div">
           <l-map
-            v-if="!loading" 
+            v-if="!loading"
             v-model="zoom"
             v-model:zoom="zoom"
             :center="[location.coords.latitude, location.coords.longitude]"
@@ -9,16 +9,23 @@
           <l-tile-layer
               url="https://m1.mapserver.mapy.cz/turist-m/{z}-{x}-{y}"
           ></l-tile-layer>
-          <l-marker v-for="(car) in resp.features"
-          :key="car.properties.id"
-              :lat-lng="[car.geometry.coordinates[1],car.geometry.coordinates[0]]"
-          ></l-marker>
+          <l-marker v-for="(vehicle) in resp.features"
+          :key="vehicle.properties.id"
+              :lat-lng="[vehicle.geometry.coordinates[1],vehicle.geometry.coordinates[0]]"
+          >
+            <l-icon class="extra-class" :icon-anchor="[20, 42]">
+              <img :src="getIconUrl(vehicle.properties.trip.vehicle_type.description_en)">
+              <div class="headline" style="position: relative; top: -46px; left: 13px; font-size: x-large; text-align: center;">
+                {{ vehicle.properties.trip.gtfs.route_short_name }}
+              </div>
+            </l-icon>
+          </l-marker>
         </l-map>
       </div>
 </template>
 
 <script lang="ts">
-import { LMap, LTileLayer, LMarker } from "@vue-leaflet/vue-leaflet";
+import { LMap, LTileLayer, LMarker, LIcon } from "@vue-leaflet/vue-leaflet";
 import { ref, onMounted } from 'vue'
 import "leaflet/dist/leaflet.css";
 import axios from 'axios';
@@ -31,42 +38,52 @@ export default {
   components: {
     LMap,
     LTileLayer,
-    LMarker},
+    LMarker,
+    LIcon
+  },
   data() {
     return {
-      zoom: 12
+      zoom: 16,
+      interval: null
     };
   },
   methods: {
     log(a) {
       console.log(a);
+    },
+    getIconUrl(type) {
+      return "/odjezdy/horska/assets/icon/"+type+"-bubble-xs.png";
     }
   },
   setup(name) {
     const resp = ref(0);
     const loading = ref(true);
     const location = ref({coords: {
-      latitude: 50.2,
-      longitude: 14.4
+      latitude: process.env.VUE_APP_STATION_LAT,
+      longitude: process.env.VUE_APP_STATION_LNG
     }});
     const urlStart = ref('');
   onMounted(() => {
-        if(!("geolocation" in navigator)) {
-          console.log('Geolocation is not available.');
-        }
-            
-        navigator.geolocation.getCurrentPosition(pos => {
-          location.value = pos;
-          if(name.name == 'Cars') {
-      urlStart.value = 'https://api.golemio.cz/v2/sharedcars/?latlng='+location.value.coords.latitude+"%2C"+location.value.coords.longitude+"&range=15000&limit=50";
-    } else if (name.name == 'Bikes') {
-      urlStart.value = 'https://api.golemio.cz/v2/sharedbikes/?latlng='+location.value.coords.latitude+"%2C"+location.value.coords.longitude+"&range=15000&limit=50";
-    } else {
+    urlStart.value = 'https://api.golemio.cz/v2/vehiclepositions?limit=1000&offset=0';
+    axios.get(urlStart.value, {
+      headers: {
+        'X-Access-Token': process.env.VUE_APP_GOLEMIO_ACCESS_TOKEN,
+        "Content-Type": "application/json",
+      }
+    })
+        .then(response => {
+          resp.value = response.data;
+          loading.value = false;
+          console.log(resp);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    const interval = setInterval(() => {
       urlStart.value = 'https://api.golemio.cz/v2/vehiclepositions?limit=1000&offset=0';
-    }
            axios.get(urlStart.value, {
             headers: {
-            'X-Access-Token': '',
+            'X-Access-Token': process.env.VUE_APP_GOLEMIO_ACCESS_TOKEN,
             "Content-Type": "application/json",
             }
         })
@@ -77,9 +94,7 @@ export default {
        .catch(function (error) {
              console.log(error);
         });
-        }, err => {
-          console.log(err);
-        });
+           }, 10000);
 
     })
     return {
@@ -96,5 +111,15 @@ export default {
   height: 100%;
   width: 100%;
 }
-
+.extra-class {
+   background-color: aqua;
+   padding: 10px;
+   border: 1px solid #333;
+   border-radius: 0 20px 20px 20px;
+   box-shadow: 5px 3px 10px rgba(0, 0, 0, 0.2);
+   text-align: center;
+   width: auto !important;
+   height: auto !important;
+   margin: 0 !important;
+ }
 </style>
