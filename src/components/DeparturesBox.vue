@@ -1,6 +1,6 @@
 <template>
   <ion-list-header mode="ios">
-    <ion-label v-if="!loading" mode="ios" style="font-size: x-large">{{ resp[0].stop.name }} <small>{{ stationNameComment }}</small></ion-label>
+    <ion-label v-if="!loading" mode="ios" style="font-size: x-large">{{ resp[0].stop.name }} <small>{{ stationNameComment }}</small>  <ion-spinner style="float: right" color="primary" name="circles" v-if="reloading"></ion-spinner></ion-label>
   </ion-list-header>
   <ion-list v-if="!loading">
     <ion-item v-for="(departure, index) in resp" :key="index" v-show="(departure.stop.platform_code===platform)">
@@ -34,7 +34,7 @@ import {
   IonItem,
   IonList,
   IonLabel,
-  IonListHeader, IonCol, IonGrid, IonRow
+  IonListHeader, IonCol, IonGrid, IonRow, IonSpinner
 } from '@ionic/vue';
 import { ref, onMounted } from 'vue'
 import axios from 'axios';
@@ -54,7 +54,8 @@ export default {
     IonListHeader,
     IonCol,
     IonGrid,
-    IonRow
+    IonRow,
+    IonSpinner
   },
   data() {
     return {
@@ -75,6 +76,7 @@ export default {
   setup(props) {
     const resp = ref('');
     const loading = ref(true);
+    const reloading = ref(false);
     const urlStart = ref('');
     onMounted(() => {
       urlStart.value = 'https://api.golemio.cz/v2/departureboards/?limit=10&offset=0&cisIds='+props.cisId+'&minutesBefore=0&minutesAfter=60&preferredTimezone=Europe%2FPrague&orderBySchedule=false&showAllRoutesFirst=false';
@@ -91,6 +93,7 @@ export default {
             console.log(error);
           });
       const interval = setInterval(() => {
+        reloading.value = true;
         urlStart.value = 'https://api.golemio.cz/v2/departureboards/?limit=10&offset=0&cisIds='+props.cisId+'&minutesBefore=0&minutesAfter=60&preferredTimezone=Europe%2FPrague&orderBySchedule=false&showAllRoutesFirst=false';
         axios.get(urlStart.value, {
           headers: {
@@ -99,7 +102,7 @@ export default {
           }
         }).then(response => {
           resp.value = response.data;
-          loading.value = false;
+          reloading.value = false;
         })
             .catch(function (error) {
               console.log(error);
@@ -109,7 +112,8 @@ export default {
     })
     return {
       resp,
-      loading
+      loading,
+      reloading
     }
   }
 }
