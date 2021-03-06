@@ -3,7 +3,7 @@
     <ion-label v-if="!loading" mode="ios" style="font-size: x-large">{{ resp[0].stop.name }} <small>{{ stationNameComment }}</small>  <ion-spinner style="float: right" color="primary" name="circles" v-if="reloading"></ion-spinner></ion-label>
   </ion-list-header>
   <ion-list v-if="!loading">
-    <ion-item v-for="(departure, index) in resp" :key="index" v-show="(departure.stop.platform_code===platform)">
+    <ion-item v-for="(departure, index) in resp" :key="index" v-show="((platform==='')||(departure.stop.platform_code===platform))">
       <ion-grid style="padding: 0">
         <ion-row>
           <ion-col size="1" style="padding: 0 15px 0 0; text-align: right;">
@@ -45,7 +45,9 @@ export default {
     name: String,
     cisId: Number,
     platform: String,
-    stationNameComment: String
+    stationNameComment: String,
+    limit: Number,
+    walkingTime: Number
   },
   components: {
     IonItem,
@@ -79,7 +81,7 @@ export default {
     const reloading = ref(false);
     const urlStart = ref('');
     onMounted(() => {
-      urlStart.value = 'https://api.golemio.cz/v2/departureboards/?limit=10&offset=0&cisIds='+props.cisId+'&minutesBefore=0&minutesAfter=60&preferredTimezone=Europe%2FPrague&orderBySchedule=false&showAllRoutesFirst=false';
+      urlStart.value = 'https://api.golemio.cz/v2/departureboards/?limit='+props.limit+'&offset=0&cisIds='+props.cisId+'&minutesBefore=-'+props.walkingTime+'&minutesAfter=60&preferredTimezone=Europe%2FPrague&orderBySchedule=false&showAllRoutesFirst=false';
       axios.get(urlStart.value, {
         headers: {
           'X-Access-Token': process.env.VUE_APP_GOLEMIO_ACCESS_TOKEN,
@@ -94,7 +96,7 @@ export default {
           });
       const interval = setInterval(() => {
         reloading.value = true;
-        urlStart.value = 'https://api.golemio.cz/v2/departureboards/?limit=10&offset=0&cisIds='+props.cisId+'&minutesBefore=0&minutesAfter=60&preferredTimezone=Europe%2FPrague&orderBySchedule=false&showAllRoutesFirst=false';
+        urlStart.value = 'https://api.golemio.cz/v2/departureboards/?limit='+props.limit+'&offset=0&cisIds='+props.cisId+'&minutesBefore=-'+props.walkingTime+'&minutesAfter=60&preferredTimezone=Europe%2FPrague&orderBySchedule=false&showAllRoutesFirst=false';
         axios.get(urlStart.value, {
           headers: {
             'X-Access-Token': process.env.VUE_APP_GOLEMIO_ACCESS_TOKEN,

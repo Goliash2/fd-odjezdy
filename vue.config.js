@@ -1,3 +1,3 @@
 module.exports = {
-    publicPath: '/odjezdy/horska/'
+    publicPath: '/odjezdy/florenc/'
 }

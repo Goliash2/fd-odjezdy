@@ -15,7 +15,7 @@
               url="https://m1.mapserver.mapy.cz/turist-m/{z}-{x}-{y}"
           ></l-tile-layer>
             <l-control-attribution position="bottomleft" prefix='&copy; <a href="http://www.seznam.cz">Seznam.cz, a.s.</a>, <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'></l-control-attribution>
-            <l-control-attribution position="bottomright" prefix='<img src="/odjezdy/horska/assets/logo/mapy-cz/mapy_logo.png" height=30>'></l-control-attribution>
+            <l-control-attribution position="bottomright" :prefix="mapyCzLogoUrl"></l-control-attribution>
           <l-marker v-for="(vehicle) in resp.features"
           :key="vehicle.properties.id"
               :lat-lng="[vehicle.geometry.coordinates[1],vehicle.geometry.coordinates[0]]"
@@ -52,7 +52,8 @@ export default {
   data() {
     return {
       zoom: 16,
-      interval: null
+      interval: null,
+      mapyCzLogoUrl: '<img alt="mapy.cz logo" src="'+process.env.VUE_APP_BASE_URL+'/assets/logo/mapy-cz/mapy_logo.png" height=30>'
     };
   },
   methods: {
@@ -60,7 +61,7 @@ export default {
       console.log(a);
     },
     getIconUrl(type) {
-      return "/odjezdy/horska/assets/icon/"+type+"-bubble-xs.png";
+      return process.env.VUE_APP_BASE_URL+"/assets/icon/"+type+"-bubble-xs.png";
     }
   },
   setup(name) {
@@ -72,7 +73,7 @@ export default {
     }});
     const urlStart = ref('');
   onMounted(() => {
-    urlStart.value = 'https://api.golemio.cz/v2/vehiclepositions?limit=1000&offset=0';
+    urlStart.value = 'https://api.golemio.cz/v2/vehiclepositions?limit=1000&offset=0&routeShortName[]=1&routeShortName[]=2&routeShortName[]=3&routeShortName[]=4&routeShortName[]=5&routeShortName[]=6&routeShortName[]=7&routeShortName[]=8&routeShortName[]=9&routeShortName[]=10&routeShortName[]=11&routeShortName[]=12&routeShortName[]=13&routeShortName[]=14&routeShortName[]=15&routeShortName[]=16&routeShortName[]=17&routeShortName[]=18&routeShortName[]=19&routeShortName[]=20&routeShortName[]=21&routeShortName[]=22&routeShortName[]=23&routeShortName[]=24&routeShortName[]=25&routeShortName[]=26&routeShortName[]=27&routeShortName[]=28&routeShortName[]=29&routeShortName[]=30&routeShortName[]=31&routeShortName[]=32&routeShortName[]=148&routeShortName[]=176&routeShortName[]=91&routeShortName[]=92&routeShortName[]=93&routeShortName[]=94&routeShortName[]=95&routeShortName[]=96&routeShortName[]=97&routeShortName[]=98&routeShortName[]=99&routeShortName[]=207&routeShortName[]=135&routeShortName[]=909&routeShortName[]=908&routeShortName[]=175&routeShortName[]=133&routeShortName[]=194';
     axios.get(urlStart.value, {
       headers: {
         'X-Access-Token': process.env.VUE_APP_GOLEMIO_ACCESS_TOKEN,
@@ -82,13 +83,12 @@ export default {
         .then(response => {
           resp.value = response.data;
           loading.value = false;
-          console.log(resp);
         })
         .catch(function (error) {
           console.log(error);
         });
     const interval = setInterval(() => {
-      urlStart.value = 'https://api.golemio.cz/v2/vehiclepositions?limit=1000&offset=0';
+      urlStart.value = 'https://api.golemio.cz/v2/vehiclepositions?limit=1000&offset=0&routeShortName[]=1&routeShortName[]=2&routeShortName[]=3&routeShortName[]=4&routeShortName[]=5&routeShortName[]=6&routeShortName[]=7&routeShortName[]=8&routeShortName[]=9&routeShortName[]=10&routeShortName[]=11&routeShortName[]=12&routeShortName[]=13&routeShortName[]=14&routeShortName[]=15&routeShortName[]=16&routeShortName[]=17&routeShortName[]=18&routeShortName[]=19&routeShortName[]=20&routeShortName[]=21&routeShortName[]=22&routeShortName[]=23&routeShortName[]=24&routeShortName[]=25&routeShortName[]=26&routeShortName[]=27&routeShortName[]=28&routeShortName[]=29&routeShortName[]=30&routeShortName[]=31&routeShortName[]=32&routeShortName[]=148&routeShortName[]=176&routeShortName[]=91&routeShortName[]=92&routeShortName[]=93&routeShortName[]=94&routeShortName[]=95&routeShortName[]=96&routeShortName[]=97&routeShortName[]=98&routeShortName[]=99&routeShortName[]=207&routeShortName[]=135&routeShortName[]=909&routeShortName[]=908&routeShortName[]=175&routeShortName[]=133&routeShortName[]=194';
            axios.get(urlStart.value, {
             headers: {
             'X-Access-Token': process.env.VUE_APP_GOLEMIO_ACCESS_TOKEN,
